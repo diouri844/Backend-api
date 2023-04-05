@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import User from "../models/user/userModel"
 import * as jwt from "jsonwebtoken"
+import { UserPayload } from "../typings";
 import bcrypt from "bcrypt"
 import { createAccessToken } from "./services"
 
@@ -40,8 +41,15 @@ export const register = async(req:Request,res:Response)=>{
             return res.status(400).json({message: "The email is already registerd"})
         }
         
-        const registerUser = await User.create(req.body)
-        const access_token = createAccessToken({id:registerUser._id})
+        const registerUser = await User.create(req.body);
+        const registerPayload:UserPayload = {
+            id: registerUser.id,
+            email:"",
+            role:""
+        };
+        const access_token = createAccessToken(
+            registerPayload
+        );
 
         res.status(200).json({
         status: "success",
@@ -57,7 +65,7 @@ export const register = async(req:Request,res:Response)=>{
     } catch (err) {
         console.log(err)
         return res.status(500).json({
-             status: "unknown"
+             status: "unknown",
              message: err.message 
              });
     }
@@ -92,7 +100,14 @@ export const login = async(req:Request,res:Response)=>{
         })
     }
 
-    const access_token = createAccessToken({id:user._id})
+    const Mypayload:UserPayload = {
+        id: user.id,
+        email:"",
+        role:""
+    };
+    const access_token = createAccessToken(
+        Mypayload
+    );
 
     res.status(200).json({
         status: "success",

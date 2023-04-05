@@ -49,9 +49,9 @@ interface ICreateNotifyRequest extends Request {
     }
   }
 
-  export const getNotifies =async (req: Request, res: Response) => {
+  export const getNotifies = async (req: Request, res: Response) => {
     try {
-      const notifies: INotify[] = await Notifies.find({ recipients: req.user._id })
+      const notifies: INotify[] = await Notifies.find({ recipients: req.body.user._id })
         .sort("-createdAt")
         .populate("user", "avatar username");
 
@@ -78,7 +78,7 @@ interface ICreateNotifyRequest extends Request {
 
   export const deleteAllNotifies= async (req: Request, res: Response) => {
     try {
-      const notifies = await Notifies.deleteMany({ recipients: req.user._id });
+      const notifies = await Notifies.deleteMany({ recipients: req.body.user._id });
 
       return res.json({ notifies });
     } catch (err) {
