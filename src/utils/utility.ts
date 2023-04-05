@@ -24,3 +24,6 @@ export const GeneratePassword = async (password: string, salt: string) => {
 export const validatePassword = async( enteredPassword:string,savedPassword:string, salt:string)=>{
     return await GeneratePassword(enteredPassword, salt) === savedPassword
   }
+
+
+
