@@ -8,10 +8,11 @@ import morgan from "morgan"
 import DB_CONNECTION from "./database/dbconfig";
 import UserRouter from "./routes/Users";
 import router from "./routes/Admin";
-import indexRouter from './routes/index';
+import indexRouter from './routes/Index';
 import PostRouter from './routes/Post'
 import CommentRouter from './routes/Comment'
 import NotifyRouter from './routes/Notify'
+import { IOType } from "child_process";
 const SocketServer = require('./socketServer');
 const app = express();
 
@@ -48,7 +49,7 @@ const http = require('http').createServer(app);
 const io = require('socket.io')(http);
 
 
-io.on('connection', socket => {
+io.on('connection', (socket: typeof io.socket) => {
     SocketServer(socket);
 })
 

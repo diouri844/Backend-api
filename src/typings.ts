@@ -1,6 +1,7 @@
+import { ObjectId } from "mongoose";
 
   export interface UserPayload{
-    email: string;
-    role: string;
-    id: string;
+    email: String;
+    role: String;
+    id: String;
 }
