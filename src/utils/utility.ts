@@ -2,6 +2,7 @@ import jwt,{JwtPayload} from "jsonwebtoken";
 import { APP_SECRET } from "../config/index";
 import { UserPayload } from "../typings";
 import bcrypt from "bcrypt"
+import { Types } from "mongoose";
 
 
 export const GenerateSalt = async () => {
@@ -24,6 +25,10 @@ export const GeneratePassword = async (password: string, salt: string) => {
 export const validatePassword = async( enteredPassword:string,savedPassword:string, salt:string)=>{
     return await GeneratePassword(enteredPassword, salt) === savedPassword
   }
+
+export const isValidOId = ( id_target:string ): boolean =>{
+    return Types.ObjectId.isValid(id_target);
+}
 
 
 
