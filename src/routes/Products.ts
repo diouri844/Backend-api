@@ -1,5 +1,9 @@
 import express from "express";
-import { createProduct, getProductsByQuery } from "../controllers/productController";
+import { createProduct, 
+        getProductsByQuery,
+        updateProductsById,
+        deleteProductById
+     } from "../controllers/productController";
 
 // crete new router : 
 
@@ -11,6 +15,8 @@ const ProductRouter = express.Router();
 
 ProductRouter.post('/create',createProduct);
 ProductRouter.get('/',getProductsByQuery);
+ProductRouter.put('/:id',updateProductsById);
+ProductRouter.delete('/:id',deleteProductById);
 
 // export : 
 export default ProductRouter;
