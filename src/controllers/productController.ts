@@ -2,11 +2,13 @@ import { Request, Response } from "express";
 import Product from "../models/product/productModel";
 import { IProduct } from "../models/product/product.interface";
 import Options from '../utils/Paginate';
+import { isValidOId } from '../utils/utility';
 // create new product :
 
 
 export const createProduct = async (req:Request, res:Response) => {
     // extract data from body : 
+    
     try{
         const {
             name ,
@@ -97,5 +99,80 @@ export const getProductsByQuery = async (req:Request, res:Response) => {
 
 
 
+export const updateProductsById = async ( req:Request, res:Response) =>{
+    // get id from params : 
+    const { id } = req.params;
+    if ( ! isValidOId ( id )){
+        res.status(404).json({
+            status:"unknown",
+            message:" Product  id not valid OID "
+        });
+    }
+    // get updated product : 
+    const updatedProduct:IProduct = req.body;
+    // try to update target : 
+    try{
+        const target = await Product.findByIdAndUpdate(
+            id,
+            updatedProduct,
+            { new: true }
+        );
+        // check product status :
+        if ( !target ){
+            res.status(404).json({
+                status:"unknown",
+                message:" Product not found"
+            });    
+        }
+        // all is greate and target is updated : 
+        res.status(200).json({
+            status:"success",
+            message:"Product Updated ",
+            product:target
+        });
+    }catch( err ){
+        res.status(500).json({
+            status:"unknown",
+            message:err.message 
+        })
+    }
+}
+
+
+
+export const deleteProductById = async ( req:Request, res:Response ) =>{
+    const { id } = req.params;
+    // check if is valid :
+    if ( !isValidOId( id) ){
+        res.status(404).json({
+            status:"unknown",
+            message:" Product  id not valid OID "
+        });
+    }
+    // try to get
+    try{
+        const target:IProduct = await Product.findByIdAndDelete(id);
+        if ( !target ){
+            res.status(404).json({
+                status:"unknown",
+                message:" Product not found"
+            }); 
+        }
+        // all is greate and product deleted :
+        res.status(200).json(
+            {
+                status:"success",
+                message:"Product Deleted ",
+                product:target
+            }
+        ) 
+    }catch( err ){
+        res.status(500).json({
+            status:"unknown",
+            message:err.message 
+        })
+    }
+
+}
 
 
