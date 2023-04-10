@@ -21,6 +21,7 @@ const auth = async (req: JwtPayload, res: Response, next: NextFunction) => {
 
         req.user = user;
         next();
+        return;
     } catch (err) {
         return res.status(500).json({msg: err.message});
     }
