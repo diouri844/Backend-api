@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import Conversations, { IConversation } from "../models/Conversation/conversatonModel";
 import Messages, { IMessage } from "../models/message/messageModel";
+import { AnyARecord, AnyRecord } from "dns";
 
 class APIfeatures {
   query: any;
@@ -24,19 +25,21 @@ interface IMessageRequest extends Request {
   user: { _id: string };
   params: { id: string };
 }
-
+/*
 interface IMessageResponse extends Response {
-  json: (body?: any) => IMessageResponse;
-}
+    json: (body?: Record<any,any>) => this.IMessageResponse;
+}*/
 
 interface IMessageCtrl {
-  createMessage: (req: IMessageRequest, res: IMessageResponse) => Promise<IMessageResponse>;
-  getConversations: (req: IMessageRequest, res: IMessageResponse) => Promise<IMessageResponse>;
-  getMessages: (req: IMessageRequest, res: IMessageResponse) => Promise<IMessageResponse>;
+  createMessage: (req: IMessageRequest, res: Response) => Promise<Response>;
+  getConversations: (req: IMessageRequest, res: Response) => Promise<Response>;
+  getMessages: (req: IMessageRequest, res: Response) => Promise<Response>;
 }
 
+
+
 const messageCtrl: IMessageCtrl = {
-  createMessage: async (req: IMessageRequest, res: IMessageResponse) => {
+  createMessage: async (req: IMessageRequest, res: Response) => {
     try {
       const { recipient, text, media } = req.body;
       if (!recipient || (!text.trim() && media.length === 0)) return res.json({ msg: "Nothing to send." });
@@ -72,7 +75,7 @@ const messageCtrl: IMessageCtrl = {
     }
   },
 
-  getConversations: async (req: IMessageRequest, res: IMessageResponse) => {
+  getConversations: async (req: IMessageRequest, res: Response) => {
     try {
       const features = new APIfeatures(
         Conversations.find({
@@ -94,7 +97,7 @@ const messageCtrl: IMessageCtrl = {
     }
   },
 
-  getMessages: async (req: IMessageRequest, res: IMessageResponse) => {
+  getMessages: async (req: IMessageRequest, res: Response) => {
     try {
       const features = new APIfeatures(
         Messages.find({
