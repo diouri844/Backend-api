@@ -54,13 +54,6 @@ export const removeNotify = async (req: Request, res: Response) => {
   }
 };
 
-export const getNotifies = async (req: CustomRequest, res: Response) => {
-  try {
-    const notifies: INotify[] = await Notifies.find({
-      recipients: req.user._id,
-    })
-      .sort("-createdAt")
-      .populate("user", "avatar username");
 
     return res.json({ notifies });
   } catch (err) {
@@ -83,9 +76,6 @@ export const isReadNotify = async (req: Request, res: Response) => {
   }
 };
 
-export const deleteAllNotifies = async (req: CustomRequest, res: Response) => {
-  try {
-    const notifies = await Notifies.deleteMany({ recipients: req.user._id });
 
     return res.json({ notifies });
   } catch (err) {

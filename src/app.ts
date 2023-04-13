@@ -8,11 +8,6 @@ import morgan from "morgan";
 import DB_CONNECTION from "./database/dbconfig";
 import UserRouter from "./routes/Users";
 import router from "./routes/Admin";
-import indexRouter from "./routes/Index";
-import PostRouter from "./routes/Post";
-import CommentRouter from "./routes/Comment";
-import NotifyRouter from "./routes/Notify";
-import SocketServer from "./socketServer";
 const app = express();
 
 /*Configurations */
@@ -34,12 +29,6 @@ DB_CONNECTION.on("error", (err) => {
 
 /*Routes*/
 
-app.use("/", indexRouter);
-app.use("/users", UserRouter);
-app.use("/admins", router);
-app.use("/post", PostRouter);
-app.use("/comment", CommentRouter);
-app.use("/notify", NotifyRouter);
 
 const http = require("http").createServer(app);
 const io = require("socket.io")(http);

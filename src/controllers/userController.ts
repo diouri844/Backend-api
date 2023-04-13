@@ -1,11 +1,4 @@
 import { Request, Response } from "express";
-import User from "../models/user/userModel";
-import * as jwt from "jsonwebtoken";
-import bcrypt from "bcrypt";
-import { createAccessToken } from "./services";
-import Joi from "joi";
-import countries from "i18n-iso-countries";
-import { CustomRequest } from "../utils/interfaces";
 
 // for now will keep it like this
 const isValidCountry = (
@@ -25,41 +18,6 @@ const isValidCountry = (
   return countryCode;
 };
 
-interface ID {
-  id: string;
-  user: any;
-  statusCode: number;
-  res: any;
-  req: any;
-  email: string;
-  password: string;
-}
-// comment
-const registrationSchema = Joi.object({
-  email: Joi.string().email().required(),
-  password: Joi.string().min(8).required(),
-  firstname: Joi.string().required(),
-  lastname: Joi.string().required(),
-  gender: Joi.string().valid("male", "female", "other").required(),
-  usertype: Joi.string().valid("admin", "user").required(),
-  country: Joi.string().custom(isValidCountry).required(),
-  city: Joi.string().required(),
-  postalcode: Joi.string().required(),
-  language: Joi.string().valid("EN", "FR", "IT").required(),
-  dateofbirth: Joi.date().required(),
-});
-const updateUserSchema = Joi.object({
-  password: Joi.string().min(8),
-  firstname: Joi.string(),
-  lastname: Joi.string(),
-  gender: Joi.string().valid("male", "female", "other"),
-  usertype: Joi.string().valid("admin", "user"),
-  country: Joi.string().custom(isValidCountry),
-  city: Joi.string(),
-  postalcode: Joi.string(),
-  language: Joi.string().valid("EN", "FR", "IT"),
-  dateofbirth: Joi.date(),
-});
 
 export const register = async (req: Request, res: Response) => {
   try {
@@ -77,27 +35,7 @@ export const register = async (req: Request, res: Response) => {
       dateofbirth,
     } = req.body;
     password = password.trim();
-
-    const { error } = registrationSchema.validate({
-      email,
-      password,
-      firstname,
-      lastname,
-      gender,
-      usertype,
-      country,
-      city,
-      postalcode,
-      language,
-      dateofbirth,
-    });
-    if (error && error.details) {
-      return res.status(400).json({
-        status: "failed",
-        message: error.details[0].message,
-      });
     }
-
     //Check to see if email exist in the databse
     const user_email = await User.findOne({ email });
     if (user_email) {
@@ -158,26 +96,7 @@ export const login = async (req: Request, res: Response) => {
         message: "Username and password can not be blank",
       });
     }
-    console.log(user);
-    if (!user) {
-      return res.status(400).json({
-        status: "error",
-        message: "Email or Password is incorrect",
-      });
-    }
-    password = password.trim();
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
-      return res.status(400).json({
-        status: "error",
-        message: "Email or Password is incorrect",
-      });
-    }
-    const access_token = createAccessToken({
-      id: user._id.toString(),
-      email: user.email,
-      role: user.role,
-    });
+
 
     res.status(200).json({
       status: "success",

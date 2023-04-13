@@ -3,6 +3,7 @@ import Conversations, {
   IConversation,
 } from "../models/Conversation/conversatonModel";
 import Messages, { IMessage } from "../models/message/messageModel";
+import { AnyARecord, AnyRecord } from "dns";
 
 class APIfeatures {
   query: any;
@@ -27,28 +28,10 @@ interface IMessageRequest extends Request {
   params: { id: string };
 }
 
-interface IMessageResponse
-  extends Omit<Response<any, Record<string, any>>, "json"> {
-  json: (body?: any) => IMessageResponse;
-}
 
-interface IMessageCtrl {
-  createMessage: (
-    req: IMessageRequest,
-    res: IMessageResponse
-  ) => Promise<IMessageResponse>;
-  getConversations: (
-    req: IMessageRequest,
-    res: IMessageResponse
-  ) => Promise<IMessageResponse>;
-  getMessages: (
-    req: IMessageRequest,
-    res: IMessageResponse
-  ) => Promise<IMessageResponse>;
-}
 
 const messageCtrl: IMessageCtrl = {
-  createMessage: async (req: IMessageRequest, res: IMessageResponse) => {
+  createMessage: async (req: IMessageRequest, res: Response) => {
     try {
       const { recipient, text, media } = req.body;
       if (!recipient || (!text.trim() && media.length === 0))
@@ -86,7 +69,7 @@ const messageCtrl: IMessageCtrl = {
     }
   },
 
-  getConversations: async (req: IMessageRequest, res: IMessageResponse) => {
+  getConversations: async (req: IMessageRequest, res: Response) => {
     try {
       const features = new APIfeatures(
         Conversations.find({
@@ -108,7 +91,7 @@ const messageCtrl: IMessageCtrl = {
     }
   },
 
-  getMessages: async (req: IMessageRequest, res: IMessageResponse) => {
+  getMessages: async (req: IMessageRequest, res: Response) => {
     try {
       const features = new APIfeatures(
         Messages.find({
