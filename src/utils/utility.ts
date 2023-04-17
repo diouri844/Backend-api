@@ -1,6 +1,7 @@
 import jwt,{JwtPayload} from "jsonwebtoken";
 import { APP_SECRET } from "../config/index";
 import { UserPayload } from "../typings";
+import { IVenue } from "../models/event/venue.interface";
 import bcrypt from "bcrypt"
 import { Types } from "mongoose";
 
@@ -30,5 +31,14 @@ export const isValidOId = ( id_target:string ): boolean =>{
     return Types.ObjectId.isValid(id_target);
 }
 
+export const isValidVenue = ( v_target:Object ): boolean =>{
+    try{
+    const Iv_intsnce:IVenue = v_target as IVenue;
+    return true;
+    }
+    catch{
+        return false
+    }
+}
 
 
