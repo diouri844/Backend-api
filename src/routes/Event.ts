@@ -14,9 +14,9 @@ import auth from "../middleware/isLogged";
 const EventRouter = express.Router();
 // create enpoint :
 
-EventRouter.post('/create',createEvent);
+EventRouter.post('/create',auth, createEvent);
 EventRouter.get('/',getEvent);
-EventRouter.put('/:id',UpdateEvent);
-EventRouter.delete('/:id',deleteEvent);
+EventRouter.put('/:id',auth ,UpdateEvent);
+EventRouter.delete('/:id',auth , deleteEvent);
 // export :
 export default EventRouter;
